@@ -10,12 +10,12 @@ function HeaderNav(){
               <Link to={RouterMap.Main}>На главную</Link>
             </li>
             <li className="menu-item has-children mega-menu">
-            <Link to={RouterMap.Products}>Книги</Link>
+            <Link to={RouterMap.Books}>Книги</Link>
             </li>
             <li className="menu-item has-children">
-              <a href="#">
+              <Link to={RouterMap.Cart}>
                 Корзина <i className="fas"></i>
-              </a>
+              </Link>
             </li>
           </ul>
         </div>

@@ -15,7 +15,11 @@ cur.execute("""CREATE TABLE IF NOT EXISTS users(
 cur.execute("""CREATE TABLE IF NOT EXISTS books(
    bookid INTEGER PRIMARY KEY AUTOINCREMENT,
    description TEXT,
-   name TEXT
+   name TEXT,
+   estimation INTEGER,
+   price INTEGER,
+   img TEXT,
+   discount INTEGER
    );
 """)
 
@@ -23,7 +27,6 @@ cur.execute("""CREATE TABLE IF NOT EXISTS UsersProducts(
     UsersProductsId INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER,
     book_id INTEGER,
-    cnt INTEGER,
     FOREIGN KEY (user_id) REFERENCES users(userid),
     FOREIGN KEY (book_id) REFERENCES books(id)
    );
@@ -43,12 +46,13 @@ class DataBase:
             cursor = sqlite_connection.cursor()
             cursor.execute(function(*args,**kwargs))
             sqlite_connection.commit()
-            return cursor.fetchmany()
+            result = cursor.fetchall()
+            cursor.close()
+            return result
          except sqlite3.Error as error:
             print("Ошибка при подключении к sqlite", error)
             return False
          finally:
-            cursor.close()
             if (sqlite_connection):
                sqlite_connection.close()
                print("Соединение с SQLite закрыто")
@@ -72,3 +76,7 @@ class DataBase:
    @ConnectDataBase
    def SelectedTableItems(self,params_name,paraps_value):
       return f"""SELECT * FROM {self.TABLE_NAME} WHERE {params_name} = "{paraps_value}" """
+
+   @ConnectDataBase
+   def SelectedTableAll(self):
+      return f"""SELECT * FROM {self.TABLE_NAME}"""

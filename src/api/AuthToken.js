@@ -1,10 +1,16 @@
-function AuthToken(token) {
-    const response = fetch(url, {
+import { BASE_URL } from './configApi'
+async function SendAuthToken(token) {
+    const response = await fetch(BASE_URL + 'api/v1/auth', {
         method: 'POST',
         headers: {
-            'Authorization': 'Bearer ' + token,
+            'Authorization': token,
             'Content-Type': 'application/json'
         },
-        body: { /* some data */ }
+        body: ''
     });
+    if (response.status == 404) {
+        return false
+    }
+    return await response.json()
 }
+export default SendAuthToken

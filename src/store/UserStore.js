@@ -23,18 +23,34 @@ class UserStore {
         return true
     }
 
+    exit() {
+        this.userData = {
+            auth: false,
+            token: '',
+            full_name: '',
+        }
+    }
+
     get FullName() {
         return this.userData.full_name
     }
     get isAuth() {
         return this.userData.auth
     }
+
+    get Token() {
+        return this.userData.token
+    }
+
     constructor() {
         makeObservable(this, {
             userData: observable,
             isAuth: computed,
+            exit: action,
             FullName: computed,
+            Token: computed,
             Registration: action,
+            setUserValues: action,
         })
     }
 }

@@ -1,11 +1,19 @@
-import { Switch, Route,useLocation  } from "react-router-dom";
+import { Switch, Route, useLocation  } from "react-router-dom";
 import Routers from "./router";
 import Header from "./components/Header/Header";
 import { AnimatePresence } from "framer-motion";
-import React,{useEffect} from "react";
+import React,{useEffect,useContext} from "react";
+import { observer } from 'mobx-react-lite';
+import context from "./context";
 function App() {
   let location = useLocation();
+  const {Global,Products} = useContext(context)
   
+  useEffect(()=>{
+    Global.AuthFromToken()
+    Global.LoatCart()
+    Products.LoadBooks()
+  },[])
 
   const RenderRouters = () =>
     Routers.map((element) => (
@@ -27,4 +35,4 @@ function App() {
   );
 }
 
-export default App;
+export default observer(App);

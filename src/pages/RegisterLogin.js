@@ -1,10 +1,12 @@
-import React from "react";
+import React,{ useContext } from "react";
 import Register from "../components/Register-Login/Register";
 import { motion } from "framer-motion";
 import Login from "../components/Register-Login/Login";
 import {pageVariants,pageTransition,pageStyle} from './animate'
 
+
 function RegisterLogin(){
+
     return(
         <motion.main
       initial="initial"
@@ -17,7 +19,7 @@ function RegisterLogin(){
         <div className="container">
             <div className="row">
                 <Register />
-                <Login />
+                 <Login />
             </div>
         </div>
     </motion.main>

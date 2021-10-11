@@ -1,6 +1,8 @@
 import Main from "./pages/Main"
 import LoginRegister from "./pages/RegisterLogin"
-import Products from "./pages/Products"
+import Cart from "./pages/Сart"
+import Books from "./pages/Books"
+
 const Routers = [{
         path: '/',
         name: 'Main',
@@ -12,9 +14,14 @@ const Routers = [{
         component: LoginRegister,
     },
     {
-        path: '/products',
-        name: 'Products',
-        component: Products,
+        path: '/cart',
+        name: 'Cart',
+        component: Cart,
+    },
+    {
+        path: '/books',
+        name: 'Books',
+        component: Books,
     },
 
 ]
