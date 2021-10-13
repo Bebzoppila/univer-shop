@@ -1,6 +1,6 @@
 import { makeObservable, action, observable, computed, runInAction } from 'mobx';
 import SendProduct from '../api/SendProduct';
-
+import DeleteBookItem from "../api/DeleteBookItem"
 class CartStore {
     prodicts = []
 
@@ -21,6 +21,7 @@ class CartStore {
 
     RemoveProduct = (id) => {
         this.prodicts = this.prodicts.filter(el => Number(el) !== Number(id))
+        DeleteBookItem(id)
     }
 
     Clear() {

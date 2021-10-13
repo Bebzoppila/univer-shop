@@ -1,8 +1,10 @@
+from os import pardir
 import re
 from flask import Flask,request,make_response,jsonify
 from flask_cors import CORS
 import secrets
 import hashlib
+from flask_cors.core import LOG
 
 from werkzeug.wrappers import response
 import dabaBase
@@ -25,6 +27,7 @@ class User(dabaBase.DataBase):
       return False
 
    def HashPassword(self,password):
+      password = password + '123123awdawd'
       hash_object = hashlib.sha1(password.encode())
       hex_dig = hash_object.hexdigest()
       return hex_dig
@@ -43,6 +46,13 @@ class User(dabaBase.DataBase):
    def CheckedToken(self,token):
       return self.SelectedTableItems('token',token)
 
+   def AuthFromPassword(self,date):
+      isEmail = self.SelectedTableItems('email',date['email'])
+      if not isEmail:
+         return False
+      if isEmail[0][4] == self.HashPassword(date['pass']):
+         return isEmail[0][3]
+      return False
 
 class Books(dabaBase.DataBase):
    def __init__(self,columns,table_name):
@@ -63,6 +73,8 @@ class UserBooks(dabaBase.DataBase):
 
    def GetAllUserBooks(self,user_id):
       return self.SelectedTableItems('user_id',user_id)
+
+   
 
 user_one = User(USER_TABLE_COLUMNS,'users')
 books_one = Books(BOOKS_TABLES_COLUMNS,'books')
@@ -87,7 +99,13 @@ def auth():
       if not user_date:
          return make_response("<h2>404 Error</h2>", 404)
       return jsonify({key:user_date[0][1:][indx] for indx,key in enumerate(USER_TABLE_COLUMNS) })
-   return 'awd'
+   result_auth =  user_one.AuthFromPassword(request.json)
+   print(result_auth)
+   if result_auth:
+      return jsonify({'token':result_auth})
+   return make_response("<h2>404 Error</h2>", 404)
+
+
 @app.route('/api/v1/books')
 def books():
    return jsonify(books_one.GetFullBooks())
@@ -102,14 +120,16 @@ def addBook():
 
 @app.route('/api/v1/cartbooks')
 def CartBooks():
-   print(request.headers)
    result_auth = user_one.CheckedToken(request.headers['Authorization'])
    if not result_auth:
       return make_response("<h2>404 Error</h2>", 403)
    all_user_books = books_user.GetAllUserBooks(result_auth[0][0])
    return jsonify([ elem[2] for elem in all_user_books])
-
-
+@app.route('/api/v1/delete')
+def DeleteBook():
+   books_user.RemoveTableItem('book_id',request.args['book_id'])
+   print()
+   return make_response("<h2>404 Error</h2>", 203)
 
 if __name__ == "__main__":
     app.run(debug=True)

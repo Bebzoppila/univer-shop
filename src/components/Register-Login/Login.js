@@ -18,17 +18,18 @@ const input_login_date = [
 ];
 
 function Login() {
-  let [login_date, set_login_date] = useState({
+  const [alert,set_alert] = useState(false)
+  const [login_date, set_login_date] = useState({
     email: "",
     pass: "",
   });
-  const { User } = useContext(context)
+  const { Global,User } = useContext(context)
   console.log();
 
 
   const UpdateFormLoginValues = (key, value) => {
     const copy_login = { ...login_date };
-    copy_login[key] = value;
+    copy_login[key] = value.trim();
     set_login_date(copy_login);
   };
 
@@ -42,7 +43,16 @@ function Login() {
         UpdateValues={(values) => UpdateFormLoginValues(el.key, values)}
       />
     ));
-        // if(User.)
+
+    const Auth = (event) =>{
+      event.preventDefault()
+      if(Object.values(login_date).every(el => el.length < 1)) {
+        set_alert(true)
+        return
+      } 
+      Global.AuthFromPassword(login_date)
+    }
+
     if(User.isAuth){
         return (
             <div className="col-sm-12 col-md-12 col-lg-6 col-xs-12">
@@ -59,7 +69,7 @@ function Login() {
             {" "}
             {RenderInputs()}{" "}
             <div className="col-md-12">
-              <button href="#" className="btn btn-outlined">
+              <button onClick={Auth} href="#" className="btn btn-outlined">
                 {" "}
                 Войти{" "}
               </button>{" "}
@@ -67,6 +77,12 @@ function Login() {
           </div>{" "}
         </div>{" "}
       </form>{" "}
+      <div style={{display: alert ?'' :'none'}} className="alert alert-danger" role="alert">
+        <p>Произошла ошибка</p>
+        <button onClick={() => set_alert(false)} type="button" className="bnt btn-success">
+          Закрыть
+        </button>
+      </div>
     </div>
   );
 }

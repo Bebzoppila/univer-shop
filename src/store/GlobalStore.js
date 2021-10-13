@@ -4,6 +4,7 @@ import UserStore from "./UserStore"
 import CartStore from './CartStore';
 import ProductsStore from './ProductsStore';
 import LoadCartBooks from '../api/LoadCartBooks';
+import SendAuthPassword from '../api/AuthPassword';
 class GlobalStore {
 
     SetLocalStorage(date) {
@@ -18,7 +19,6 @@ class GlobalStore {
 
     GetLocalStorage() {
         return localStorage.getItem('TOKEN')
-
     }
 
     AuthFromToken = async() => {
@@ -26,6 +26,15 @@ class GlobalStore {
         if (token) {
             const result_auth = await SendAuthToken(token);
             if (result_auth) UserStore.setUserValues(result_auth.token, result_auth.full_name)
+        }
+    }
+
+    AuthFromPassword = async(form_date) => {
+        const result = await SendAuthPassword(form_date);
+        if (result) {
+            this.SetLocalStorage(result.token)
+            this.AuthFromToken()
+            this.LoatCart()
         }
     }
 

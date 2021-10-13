@@ -66,9 +66,11 @@ class DataBase:
 
    def TypleToStr(self,typle_date):
       return ", ".join(map(str, typle_date))
-   
-   def RemoveTableItem(self):
-      pass
+      
+   @ConnectDataBase
+   def RemoveTableItem(self,colum,value):
+      print(f'DELETE from {self.TABLE_NAME} where {colum} = {value}')
+      return  f'DELETE from {self.TABLE_NAME} where {colum} = {value}'
 
    def ChangeTableItem(self):
       pass
